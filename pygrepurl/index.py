@@ -112,4 +112,4 @@ def lines_to_urlstore(it, urlstore):
         line = line.decode('utf-8')
         url = util.prepare_url(line)
         urlstore.add(url)
-        if i > 250: break
+        #if i > 250: break
