@@ -2,10 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import pytest
-from pygrepurl.skeleton import fib
 from pygrepurl.util import START_URL, END_URL, split_trigrams
 from pygrepurl.index import runimport, MemoryURLStore
-from pygrepurl import search_trigrams
+from pygrepurl.search import search_trigrams
 
 __author__ = "Dan O'Huiginn"
 __copyright__ = "Dan O'Huiginn"
@@ -27,10 +26,10 @@ def test_urlstore():
     ms = MemoryURLStore()
     for i, el  in enumerate(['aa', 'bbb', 'c', 'd']):
         idx = ms.add(el)
-        assert ms.getURL(idx) == el
+        assert ms.get(idx) == el
 
 def test_retrieveurl():
     urlstore, tgindex = runimport(['tests/testdata.txt'])
-    searchterm, expected = "fabians.*ELect...l", ["http://www.fabians.org.uk/under-corbyns-ELectoral-plan-prospects-for-victory-look-bleak/"]
+    searchterm, expected = ".*fabians.*ELect...l.*", ["http://www.fabians.org.uk/under-corbyns-electoral-plan-prospects-for-victory-look-bleak/"]
     actual = search_trigrams(searchterm, urlstore, tgindex)
-    assert(list(actual) == [expected])
+    assert(list(actual) == expected)
