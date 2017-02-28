@@ -3,9 +3,9 @@
 
 import pytest
 from pygrepurl.skeleton import fib
-from pygrepurl.spl import START_URL, END_URL
-from pygrepurl.spl import split_trigram, runimport
-from pygrepurl import spl
+from pygrepurl.util import START_URL, END_URL, split_trigrams
+from pygrepurl.index import runimport, MemoryURLStore
+from pygrepurl import search_trigrams
 
 __author__ = "Dan O'Huiginn"
 __copyright__ = "Dan O'Huiginn"
@@ -13,18 +13,24 @@ __license__ = "none"
 
 
 
-def test_split_trigram():
+def test_split_trigrams():
     url = "example.com"
     expected =  [START_URL + "ex", "exa", "xam", "amp", "mpl", "ple", "le.", "e.c", ".co", "com", "om" + END_URL]
-    result = list(split_trigram(url))
+    result = list(split_trigrams(url))
     assert len(result) == len(expected)
     assert all(result[i] == expected[i] for i in range(len(expected)))
 
 def test_runimport():
-    runimport(["testdata.txt",])
+    runimport(["tests/testdata.txt",])
 
 def test_urlstore():
-    ms = spl.MemoryURLStore()
+    ms = MemoryURLStore()
     for i, el  in enumerate(['aa', 'bbb', 'c', 'd']):
-        idx = ms.addURL(el, [])
+        idx = ms.add(el)
         assert ms.getURL(idx) == el
+
+def test_retrieveurl():
+    urlstore, tgindex = runimport(['tests/testdata.txt'])
+    searchterm, expected = "fabians.*ELect...l", ["http://www.fabians.org.uk/under-corbyns-ELectoral-plan-prospects-for-victory-look-bleak/"]
+    actual = search_trigrams(searchterm, urlstore, tgindex)
+    assert(list(actual) == [expected])
