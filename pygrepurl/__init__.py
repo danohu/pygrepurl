@@ -13,6 +13,20 @@ def cli():
     pass
 
 
+class Searcher:
+    """
+    Wrapper suitable for import from other code
+    """
+
+    def __init__(self, datadir = None):
+        self.datadir = datadir or os.path.dirname(__file__) + '/../data/'
+        self.urlstore = index.MemoryURLStore.load(self.datadir)
+        self.tgindex = index.BitIndex.load(self.datadir)
+
+    def search(self, searchterm):
+        query = prepare_url(searchterm)
+        return search_trigrams(query, self.urlstore, self.tgindex)
+
 @cli.command()
 @click.option('--datadir', default=os.path.dirname(os.path.abspath(__file__)) + '/../data/')
 @click.argument('files', nargs=-1)

@@ -1,4 +1,5 @@
-import urllib.parse
+from six.moves.urllib import parse
+
 
 START_URL = "\x02"
 END_URL = "\x03"
@@ -26,6 +27,6 @@ special_chars = [START_URL, END_URL]
 def prepare_url(url):
     url = url.strip().lower()
     if not all(x in valid_chars for x in url):
-        url = urllib.parse.quote(url)
+        url = parse.quote(url)
     assert len(url) > 2
     return url
