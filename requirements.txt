@@ -6,3 +6,8 @@ roaringbitmap
 click
 pytest
 nose
+six
+flask
+alembic
+sqlalchemy
+wtforms
