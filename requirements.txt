@@ -4,3 +4,5 @@
 marisa-trie
 roaringbitmap
 click
+pytest
+nose
