@@ -30,6 +30,11 @@ def test_urlstore():
 
 def test_retrieveurl():
     urlstore, tgindex = runimport(['tests/testdata.txt'])
-    searchterm, expected = ".*fabians.*ELect...l.*", ["http://www.fabians.org.uk/under-corbyns-electoral-plan-prospects-for-victory-look-bleak/"]
-    actual = search_trigrams(searchterm, urlstore, tgindex)
-    assert(list(actual) == expected)
+    searches = (
+        (".*fabians.*[eE]lect...l.*", ["http://www.fabians.org.uk/under-corbyns-electoral-plan-prospects-for-victory-look-bleak/"]),
+        ('^http://kamiel', ['http://kamiel.creativechoice.org/2015/09/10/will-work-for-the-commons/',]),
+        ('[^/]$', ['http://stackoverflow.com/questions/105788/good-postgresql-client-for-windows', 'http://exple.tive.org/blarg/2015/09/20/bourne-aesthetic']),
+         )
+    for searchterm, expected in searches:
+        actual = search_trigrams(searchterm, urlstore, tgindex)
+        assert(sorted(actual) == sorted(expected))
