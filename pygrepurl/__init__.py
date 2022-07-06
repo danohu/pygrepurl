@@ -42,8 +42,7 @@ def serve(datadir):
     urlstore = index.MemoryURLStore.load(datadir)
     tgindex = index.BitIndex.load(datadir)
     for line in sys.stdin:
-        line = prepare_url(line)
-        for match in search_trigrams(line, urlstore, tgindex):
+        for match in search_trigrams(line.strip(), urlstore, tgindex):
             sys.stdout.write(match + '\n')
         
 

@@ -21,8 +21,7 @@ def trigrams_from_regex(rgx):
     return json.loads(trgms)
 
 def search_trigrams(query, urlstore, tgindex):
-    query = util.prepare_url(query)
-    regex = re.compile(query.lower().strip())
+    regex = re.compile(query)
     tg_tree = trigrams_from_regex(query)
     bmp = RoaringQuery(tg_tree, tgindex)
     candidates = (urlstore.get(url_id) for url_id in bmp)
@@ -49,7 +48,7 @@ def RoaringQuery(qry, tgindex):
         return RoaringBitmap()
 
     # now, build up the list of (references to) bitmaps
-    bitmaps = [tgindex.maps[tg] for tg in qry['Trigram']]
+    bitmaps = [tgindex.maps[tg] for tg in qry['Trigram'] or []]
     for subquery in qry['Sub'] or []:
         bitmaps.append(RoaringQuery(subquery, tgindex))
 

@@ -26,7 +26,8 @@ special_chars = [START_URL, END_URL]
 
 def prepare_url(url):
     url = url.strip().lower()
+    return url
     if not all(x in valid_chars for x in url):
         url = parse.quote(url)
-    assert len(url) > 2
+    # assert len(url) > 2
     return url

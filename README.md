@@ -50,23 +50,31 @@ You can start a basic command-line interface with
 
 	pygrepurl serve
 
-This will use a small dataset of ~12,000 URLs. Type a regex to stdin, and you'll see matching URLs
+This will use a small dataset of ~15,000 URLs. Type a regex to stdin, and you'll see matching URLs.
+
+You can try:
+* match everything: `.*`
+* plain text: `id=25`
+* all text or pdf documents: `.(pdf|txt)$`
+* numbers that look like a date: `\D20[012]\d{5}\D`
+* urls from one domain: `^https://www.abk-stuttgart.de/`
 
 ## Building your own index
 
 More useful is to build your own database of URLs. pygrepurl expects you to feed it a bunch of files containing URLs, one per line, optionally gzipped. 
 
-Common crawl is a good starting-point. You can use their [url index client](https://github.com/ikreymer/cdx-index-client) to download, for example, all URLs in the .de TLD:
+Common crawl is a good starting-point. You can use their [url index client](https://github.com/ikreymer/cdx-index-client) to download, for example,  a sample of 15000 urls from the .de TLD:
 
-	./cdx-index-client.py "*de" --fl url  -d /data/commoncrawl -z -o de_
+    ./cdx-index-client.py --fl url  "*.de" --pages 99 -j
 
-This will give you a bunch of gzipped files like /data/commoncrawl/de_2676.gz
+This will give you a file `domain-de-CC-MAIN-2022-2199` -- you can adjust the url and pages selectors if you want more or different URLs
+
+Use jq to extract just the URLs:
+
+    jq -r .url domain-de-CC-MAIN-2022-2199 > data/sample_data.txt
 
 Then use the pygrepurl cli to import these files:
 
-	pygrepurl load /data/commoncrawl/*gz
+	pygrepurl load data/sample_data.txt
 
 ...and make yourself some tea.
-
-
-
